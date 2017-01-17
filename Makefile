@@ -38,10 +38,10 @@ plot-all:
 
 crawl-city:
 	mkdir -p out/$(job_start_date)
-	if [ "${KIND}" == "wynajem" ] ; then \
+	if [ "${KIND}" = "wynajem" ] ; then \
 		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$(job_start_date)/${CITY}-rental.jl ; \
 	fi
-	if [ "${KIND}" == "sprzedaz" ] ; then \
+	if [ "${KIND}" = "sprzedaz" ] ; then \
 		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$(job_start_date)/${CITY}-sales.jl ; \
 	fi
 
