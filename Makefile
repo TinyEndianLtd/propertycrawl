@@ -17,12 +17,11 @@ day:
 	make report-all
 
 preproc:
-	echo "$$CITIES" > \
-		python -m propertycrawl.preproc.dump_cities --jl \
-		> out/$$JOB_START_DATE/cities.js
+	mkdir -p out/$$JOB_START_DATE
+	echo "$$CITIES" | python -m propertycrawl.preproc.dump_cities --jl > out/$$JOB_START_DATE/cities.jl
 
 crawl-all:
-	for city in $$(echo "$$CITIES" > python -m propertycrawl.preproc.dump_cities --env) ; \
+	for city in $$(echo "$$CITIES" | python -m propertycrawl.preproc.dump_cities --env) ; \
 	do \
 		CITY=$$city KIND=wynajem make crawl-city ; \
 		CITY=$$city KIND=sprzedaz make crawl-city ; \
