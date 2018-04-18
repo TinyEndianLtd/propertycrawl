@@ -2,20 +2,18 @@ cities = \
 	warszawa \
 	krakow	\
 	lodz \
-        wroclaw \
+	wroclaw \
 	poznan \
 	gdansk \
 	szczecin \
 	lublin \
 	katowice \
 
-job_start_date = $(shell date +%Y-%m-%d)
-
 all:
 	make check-env
+	make clean
 	make crawl-all
 	make report-all
-	make plot-all
 
 crawl-all:
 	for city in $(cities) ; \
@@ -30,43 +28,25 @@ report-all:
 		CITY=$$city make report-city ; \
 	done
 
-plot-all:
-	for city in $(cities) ; \
-	do \
-		CITY=$$city make plot-city ; \
-	done
-
 crawl-city:
-	mkdir -p out/$(job_start_date)
+	mkdir -p out/$$JOB_START_DATE
 	if [ "${KIND}" = "wynajem" ] ; then \
-		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$(job_start_date)/${CITY}-rental.jl ; \
+		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$$JOB_START_DATE/${CITY}-rental.jl ; \
 	fi
 	if [ "${KIND}" = "sprzedaz" ] ; then \
-		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$(job_start_date)/${CITY}-sales.jl ; \
+		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$$JOB_START_DATE/${CITY}-sales.jl ; \
 	fi
 
 report-city:
-	python -m propertycrawl.postproc.overall_city_stats_csv \
-		out/$(job_start_date)/${CITY}-rental.jl \
-		out/$(job_start_date)/${CITY}-sales.jl \
-		> out/$(job_start_date)/${CITY}-report.csv 
+	python -m propertycrawl.postproc.overall_city_stats \
+		out/$$JOB_START_DATE/${CITY}-rental.jl \
+		out/$$JOB_START_DATE/${CITY}-sales.jl \
+		> out/$$JOB_START_DATE/${CITY}-report-roi.jl 
 
-plot-city:
-	python -m propertycrawl.plots.barchart \
-                ${CITY} \
-		"District" \
-		"ROI (%)" \
-		out/$(job_start_date)/${CITY}-report.csv \
-		out/$(job_start_date)/${CITY}-report-chart.html
-
-	python -m propertycrawl.plots.map \
-		out/$(job_start_date)/${CITY}-rental.jl \
-		out/$(job_start_date)/${CITY}-sales.jl \
-		out/$(job_start_date)/${CITY}-map-bg.png \
-		out/$(job_start_date)/${CITY}-map-plot.html
+clean:
+	rm -rf out
 
 check-env:
-ifndef MAPBOX_ACCESS_TOKEN
-	$(error MAPBOX_ACCESS_TOKEN is not set)
+ifndef JOB_START_DATE
+	$(error JOB_START_DATE is not set)
 endif
-

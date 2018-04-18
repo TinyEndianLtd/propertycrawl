@@ -1,6 +1,7 @@
 import sys
 import math
 import os
+import json
 
 from .utils.common import read_json_lines
 from .utils.flat import get_districts, add_districts
@@ -30,6 +31,6 @@ if __name__ == '__main__':
         else:
             results.append((district, ""))
 
-    sys.stdout.buffer.write(u"# Dzielnica, ROI (%){0}".format(os.linesep).encode('utf-8'))
     for r in sorted(results, key=lambda p: p[1], reverse=True):
-        sys.stdout.buffer.write(u"{0}, {1}{2}".format(r[0], r[1], os.linesep).encode('utf-8'))
+        datum = {'district': r[0], 'roi': r[1]}
+        sys.stdout.buffer.write(u"{0}{1}".format(json.dumps(datum), os.linesep).encode('utf-8'))
