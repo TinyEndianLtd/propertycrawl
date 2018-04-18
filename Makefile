@@ -12,11 +12,17 @@ cities = \
 day:
 	make check-env
 	make clean
+	make preproc
 	make crawl-all
 	make report-all
 
+preproc:
+	echo "$$CITIES" > \
+		python -m propertycrawl.preproc.dump_cities --jl \
+		> out/$$JOB_START_DATE/cities.js
+
 crawl-all:
-	for city in $(cities) ; \
+	for city in $$(echo "$$CITIES" > python -m propertycrawl.preproc.dump_cities --env) ; \
 	do \
 		CITY=$$city KIND=wynajem make crawl-city ; \
 		CITY=$$city KIND=sprzedaz make crawl-city ; \
@@ -46,7 +52,21 @@ report-city:
 clean:
 	rm -rf out
 
+upload-day:
+	make check-env
+	rm -rf .tmp
+	mkdir -p .tmp/daily
+	cp -r out/* .tmp/daily/
+	cd .tmp && aws s3 sync . s3://$$BUCKET_NAME
+	rm -rf .tmp
+
 check-env:
+ifndef CITIES
+	$(error CITIES is not set)
+endif
 ifndef JOB_START_DATE
 	$(error JOB_START_DATE is not set)
+endif
+ifndef BUCKET_NAME
+	$(error BUCKET_NAME is not set)
 endif
