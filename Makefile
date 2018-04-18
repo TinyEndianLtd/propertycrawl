@@ -9,7 +9,7 @@ cities = \
 	lublin \
 	katowice \
 
-all:
+day:
 	make check-env
 	make clean
 	make crawl-all
