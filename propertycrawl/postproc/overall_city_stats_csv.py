@@ -1,8 +1,9 @@
 import sys
 import math
+import os
 
-from utils.common import read_json_lines
-from utils.flat import get_districts, add_districts
+from .utils.common import read_json_lines
+from .utils.flat import get_districts, add_districts
 
 
 def avg_price_per_square_meter(data):
@@ -29,6 +30,6 @@ if __name__ == '__main__':
         else:
             results.append((district, ""))
 
-    print u"# Dzielnica, ROI (%)".encode('utf-8')
+    sys.stdout.buffer.write(u"# Dzielnica, ROI (%){0}".format(os.linesep).encode('utf-8'))
     for r in sorted(results, key=lambda p: p[1], reverse=True):
-        print u"{0}, {1}".format(*r).encode('utf-8')
+        sys.stdout.buffer.write(u"{0}, {1}{2}".format(r[0], r[1], os.linesep).encode('utf-8'))

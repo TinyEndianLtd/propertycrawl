@@ -1,3 +1,5 @@
+import math
+
 def get_districts(data):
     valid_addresses = [datum['address_details'] for datum in data if len(datum['address_details']) == 3]
     district_hist = {}
@@ -8,7 +10,7 @@ def get_districts(data):
         else:
             district_hist[district] = 1
     
-    edge_score = sorted(district_hist.values(), reverse=True)[len(district_hist)/3]
+    edge_score = sorted(district_hist.values(), reverse=True)[math.floor(len(district_hist)/3)]
     return [d for d, s in district_hist.items() if s >= edge_score]
 
 

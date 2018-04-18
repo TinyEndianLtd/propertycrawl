@@ -138,7 +138,7 @@ if __name__ == '__main__':
         else:
             data_by_district[district].append(d)
     centers_of_districts = {district: (sum([d['lat'] for d in samples])/len(samples), sum([d['lon'] for d in samples])/len(samples)) for district, samples in data_by_district.items()}
-    voronoi = Voronoi(np.array(centers_of_districts.values()))
+    voronoi = Voronoi(np.array(list(centers_of_districts.values())))
 
     static = Static()
     response = static.image('mapbox.light',lon=degrees(center[1]), lat=degrees(center[0]), z=zoom, width=MAP_WIDTH, height=MAP_HEIGHT)
