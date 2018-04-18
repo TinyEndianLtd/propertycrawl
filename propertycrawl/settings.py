@@ -14,7 +14,6 @@ BOT_NAME = 'propertycrawl'
 SPIDER_MODULES = ['propertycrawl.spiders']
 NEWSPIDER_MODULE = 'propertycrawl.spiders'
 
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'propertycrawl (+http://www.yourdomain.com)'
 

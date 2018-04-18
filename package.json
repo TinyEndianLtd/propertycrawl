@@ -1,0 +1,25 @@
+{
+  "name": "propertycrawl",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:TinyEndianLtd/propertycrawl.git",
+  "author": "Karol Majta <karol@tinyendian.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.md": ["prettier --write", "git add"],
+    "*.markdown": ["prettier --write", "git add"],
+    "*.json": ["prettier --write", "jsonlint", "git add"],
+    "*.py": ["yapf -i --recursive", "git add"]
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "jsonlint": "^1.6.3",
+    "lint-staged": "^7.0.4",
+    "prettier": "^1.12.1"
+  },
+  "dependencies": {}
+}
