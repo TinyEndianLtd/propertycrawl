@@ -43,10 +43,10 @@ clean:
 
 upload:
 	rm -rf .tmp
-	mkdir -p .tmp/daily
-	cp -r out/input/* .tmp/daily/
-	cp -r out/data/* .tmp/daily/
-	cp -r out/reports/daily/* .tmp/daily/
+	mkdir -p .tmp/daily/$$JOB_START_DATE/
+	cp -r out/$$JOB_START_DATE/input/* .tmp/daily/$$JOB_START_DATE/
+	cp -r out/$$JOB_START_DATE/data/* .tmp/daily/$$JOB_START_DATE/
+	cp -r out/$$JOB_START_DATE/reports/daily/* .tmp/daily/$$JOB_START_DATE/
 	cd .tmp && aws s3 sync . s3://$$BUCKET_NAME
 	rm -rf .tmp
 
