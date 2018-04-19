@@ -13,7 +13,7 @@
     "*.md": ["prettier --write", "git add"],
     "*.markdown": ["prettier --write", "git add"],
     "*.json": ["prettier --write", "jsonlint", "git add"],
-    "*.py": ["yapf -i --recursive", "git add"]
+    "*.py": ["yapf -i --recursive", "pylint", "git add"]
   },
   "devDependencies": {
     "husky": "^0.14.3",

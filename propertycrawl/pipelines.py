@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Contains scrapy pipelines related to crawling properties
+"""
 
 # Define your item pipelines here
 #
@@ -7,5 +10,15 @@
 
 
 class PropertycrawlPipeline(object):
-    def process_item(self, item, spider):
+    """
+    Pipeline for crawling property items
+    """
+
+    def process_item(self, item, _):  # pylint: disable=no-self-use
+        """
+        Return item as is without modifying.
+        :param item:
+        :param _:
+        :return:
+        """
         return item
