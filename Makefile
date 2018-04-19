@@ -21,6 +21,15 @@ postproc:
 	do \
 		CITY=$$city make report-city ; \
 	done
+	mkdir -p out/$$JOB_START_DATE/reports/alltime
+	mkdir -p .tmp
+	if aws s3 cp s3://$$BUCKET_NAME/latest/all-cities.jl .tmp/all-cities-to-date.jl ; \
+	then \
+		cat .tmp/all-cities-to-date.jl out/$$JOB_START_DATE/input/cities.jl | python -m propertycrawl.postproc.aggregated_cities $$JOB_START_DATE > out/$$JOB_START_DATE/reports/alltime/all-cities.jl ; \
+	else \
+		cat out/$$JOB_START_DATE/input/cities.jl | python -m propertycrawl.postproc.aggregated_cities $$JOB_START_DATE > out/$$JOB_START_DATE/reports/alltime/all-cities.jl ; \
+	fi
+	rm -r .tmp
 
 crawl-city:
 	mkdir -p out/$$JOB_START_DATE/data
@@ -47,7 +56,9 @@ upload:
 	cp -r out/$$JOB_START_DATE/input/* .tmp/daily/$$JOB_START_DATE/
 	cp -r out/$$JOB_START_DATE/data/* .tmp/daily/$$JOB_START_DATE/
 	cp -r out/$$JOB_START_DATE/reports/daily/* .tmp/daily/$$JOB_START_DATE/
+	cp -r out/$$JOB_START_DATE/reports/alltime/* .tmp/daily/$$JOB_START_DATE/
 	cd .tmp && aws s3 sync . s3://$$BUCKET_NAME
+	aws s3 sync s3://$$BUCKET_NAME/daily/$$JOB_START_DATE/ s3://$$BUCKET_NAME/latest/
 	rm -rf .tmp
 
 check-env:
