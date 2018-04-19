@@ -32,11 +32,11 @@ crawl-city:
 	fi
 
 report-city:
-	mkdir -p out/$$JOB_START_DATE/reports
-	python -m propertycrawl.postproc.overall_city_stats \
+	mkdir -p out/$$JOB_START_DATE/reports/daily
+	python -m propertycrawl.postproc.daily_city_report \
 		out/$$JOB_START_DATE/data/${CITY}-rental.jl \
 		out/$$JOB_START_DATE/data/${CITY}-sales.jl \
-		> out/$$JOB_START_DATE/reports/${CITY}-report-roi.jl
+		> out/$$JOB_START_DATE/reports/daily/${CITY}-report.jl
 
 clean:
 	rm -rf out
@@ -46,6 +46,7 @@ upload:
 	mkdir -p .tmp/daily
 	cp -r out/input/* .tmp/daily/
 	cp -r out/data/* .tmp/daily/
+	cp -r out/reports/daily/* .tmp/daily/
 	cd .tmp && aws s3 sync . s3://$$BUCKET_NAME
 	rm -rf .tmp
 
