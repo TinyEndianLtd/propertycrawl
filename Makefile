@@ -25,10 +25,10 @@ postproc:
 crawl-city:
 	mkdir -p out/$$JOB_START_DATE/data
 	if [ "${KIND}" = "wynajem" ] ; then \
-		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$$JOB_START_DATE/${CITY}-rental.jl ; \
+		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$$JOB_START_DATE/data/${CITY}-rental.jl ; \
 	fi
 	if [ "${KIND}" = "sprzedaz" ] ; then \
-		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$$JOB_START_DATE/${CITY}-sales.jl ; \
+		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$$JOB_START_DATE/data/${CITY}-sales.jl ; \
 	fi
 
 report-city:
