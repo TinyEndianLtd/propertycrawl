@@ -6,6 +6,7 @@ all:
 	make postproc
 
 preproc:
+	yarn run proxy-lists getProxies --sources-white-list=$$PROXIES_SOURCE_LIST
 	mkdir -p out/$$JOB_START_DATE/input
 	echo "$$CITIES" | python -m propertycrawl.preproc.dump_cities --jl > out/$$JOB_START_DATE/input/cities.jl
 
@@ -48,6 +49,7 @@ report-city:
 		> out/$$JOB_START_DATE/reports/daily/${CITY}-report.jl
 
 clean:
+	rm proxies.txt
 	rm -rf out
 
 upload:
@@ -70,4 +72,7 @@ ifndef JOB_START_DATE
 endif
 ifndef BUCKET_NAME
 	$(error BUCKET_NAME is not set)
+endif
+ifndef PROXIES_SOURCE_LIST
+	$(error PROXIES_SOURCE_LIST is not set)
 endif

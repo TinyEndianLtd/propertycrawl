@@ -23,8 +23,22 @@ NEWSPIDER_MODULE = 'propertycrawl.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
+# Retry many times since proxies often fail
+RETRY_TIMES = 10
+# Retry on most error codes since proxies fail for different reasons
+RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
+
+ROTATING_PROXY_LIST_PATH = 'proxies.txt'
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 1,
+    'rotating_proxies.middlewares.RotatingProxyMiddleware': 2,
+    'rotating_proxies.middlewares.BanDetectionMiddleware': 3,
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 4,
+}
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-#CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 64
 
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
