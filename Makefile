@@ -49,7 +49,7 @@ report-city:
 		> out/$$JOB_START_DATE/reports/daily/${CITY}-report.jl
 
 clean:
-	rm proxies.txt
+	rm -f proxies.txt
 	rm -rf out
 
 upload:
