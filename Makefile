@@ -35,10 +35,14 @@ postproc:
 crawl-city:
 	mkdir -p out/$$JOB_START_DATE/data
 	if [ "${KIND}" = "wynajem" ] ; then \
-		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$$JOB_START_DATE/data/${CITY}-rental.jl ; \
+		aws s3 cp s3://$$BUCKET_NAME/latest/${CITY}-rental.jl latest-${CITY}-rentals.jl ; \
+		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -a previous=latest-${CITY}-rentals.jl -o out/$$JOB_START_DATE/data/${CITY}-rental.jl ; \
+		rm latest-${CITY}-rentals.jl ; \
 	fi
 	if [ "${KIND}" = "sprzedaz" ] ; then \
-		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -o out/$$JOB_START_DATE/data/${CITY}-sales.jl ; \
+		aws s3 cp s3://$$BUCKET_NAME/latest/${CITY}-sales.jl latest-${CITY}-sales.jl ; \
+		scrapy crawl flats -a city=${CITY} -a kind=${KIND} -a previous=latest-${CITY}-sales.jl -o out/$$JOB_START_DATE/data/${CITY}-sales.jl ; \
+		rm latest-${CITY}-sales.jl ; \
 	fi
 
 report-city:

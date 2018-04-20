@@ -7,7 +7,7 @@ import sys
 import os
 import json
 
-from .utils.common import read_json_lines
+from ..common.utils import read_json_lines
 from .utils.flat import get_districts, add_districts
 
 
