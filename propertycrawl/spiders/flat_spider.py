@@ -48,22 +48,16 @@ class FlatListSpider(scrapy.Spider):
             uuid = extract_uuid_from_url(article)
 
             if uuid in self.previous_record_map:
-                if 'fetched_at' in self.previous_record_map[uuid]:
-                    fetched_at_raw = self.previous_record_map[uuid][
-                        'fetched_at']
-                    fetched_at = datetime.datetime.strptime(
-                        fetched_at_raw, '%Y-%m-%d').date()
-                    current_date = datetime.datetime.now().date()
-                    if (current_date -
-                            fetched_at).days <= FlatListSpider.throttle_days:
-                        yield dict(self.previous_record_map[uuid])
-                    else:
-                        yield scrapy.Request(article, callback=parse_detail)
+                fetched_at_raw = self.previous_record_map[uuid]['fetched_at']
+                fetched_at = datetime.datetime.strptime(
+                    fetched_at_raw, '%Y-%m-%d').date()
+                current_date = datetime.datetime.now().date()
+                if (current_date -
+                        fetched_at).days <= FlatListSpider.throttle_days:
+                    yield dict(self.previous_record_map[uuid])
                 else:
-                    yield dict(self.previous_record_map[uuid], **{
-                        'fetched_at':
-                        datetime.datetime.now().date().isoformat()
-                    })
+                    yield scrapy.Request(article, callback=parse_detail)
+
             else:
                 yield scrapy.Request(article, callback=parse_detail)
 
